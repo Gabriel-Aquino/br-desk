@@ -23,7 +23,7 @@ const BoasVindasBrPower = () => {
     const text = `🚗⚡ Seja bem-vindo ao BR Power ${formData.nome}!
 
 Parabéns! Agora, sua proteção está ainda mais completa.
-Quando a vida útil da bateria ${formData.marca}, ${formData.amperagem} do seu carro chegar ao fim, e ela não segurar mais carga, a BR Clube vai cuidar de tudo.
+Quando a vida útil da bateria ${formData.codigoBateria}, ${formData.marca}, ${formData.amperagem} do seu carro chegar ao fim, e ela não segurar mais carga, a BR Clube vai cuidar de tudo.
 
 Você não vai precisar desembolsar nada a mais no momento da troca.
 
@@ -34,7 +34,7 @@ Nossa equipe técnica vai até você, com rapidez e eficiência, para resolver o
 Qualquer dúvida, conte com a gente.
 
 🧡 BR Clube — Proteja do seu jeito. Inspire uma nova era.`;
-    
+
     setGeneratedText(text);
   };
 
@@ -108,9 +108,9 @@ Qualquer dúvida, conte com a gente.
             <div className="flex justify-between items-center">
               <h3 className="text-lg font-semibold">Texto Gerado:</h3>
               {generatedText && (
-                <Button 
-                  onClick={copyToClipboard} 
-                  variant="outline" 
+                <Button
+                  onClick={copyToClipboard}
+                  variant="outline"
                   size="sm"
                   className="bg-green-600 text-white hover:bg-green-700"
                 >
@@ -119,7 +119,7 @@ Qualquer dúvida, conte com a gente.
                 </Button>
               )}
             </div>
-            
+
             {generatedText && (
               <div className="bg-gray-50 p-4 rounded-lg whitespace-pre-line text-sm">
                 {generatedText}

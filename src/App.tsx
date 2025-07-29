@@ -13,6 +13,8 @@ import Rastreamento from "./pages/Rastreamento";
 import Termos from "./pages/Termos";
 import Correios from "./pages/Correios";
 import NotFound from "./pages/NotFound";
+import Assistencia24h from "./pages/Assistencia24h";
+import AgendamentoOficina from "./pages/AgendamentoOficina";
 
 const queryClient = new QueryClient();
 
@@ -30,6 +32,8 @@ const App = () => (
             <Route path="/boas-vindas/br-power" element={<BoasVindasBrPower />} />
             <Route path="/cobrancas" element={<Cobrancas />} />
             <Route path="/eventos" element={<Eventos />} />
+            <Route path="/eventos/assistencia-24h" element={<Assistencia24h />} />
+            <Route path="/eventos/agendamento-oficina" element={<AgendamentoOficina />} />
             <Route path="/rastreamento" element={<Rastreamento />} />
             <Route path="/termos" element={<Termos />} />
             <Route path="/correios" element={<Correios />} />

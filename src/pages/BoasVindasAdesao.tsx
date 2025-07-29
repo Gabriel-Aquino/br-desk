@@ -51,7 +51,7 @@ const BoasVindasAdesao = () => {
 *PARA ASSISTÊNCIA 24H:*
 
 *Whatsapp:* 4020-0164`;
-    
+
     setGeneratedText(text);
   };
 
@@ -146,8 +146,8 @@ const BoasVindasAdesao = () => {
 
             <div>
               <Label>Gênero:</Label>
-              <RadioGroup 
-                value={formData.genero} 
+              <RadioGroup
+                value={formData.genero}
                 onValueChange={(value) => handleInputChange("genero", value)}
                 className="flex flex-row space-x-4 mt-2"
               >
@@ -173,9 +173,9 @@ const BoasVindasAdesao = () => {
             <div className="flex justify-between items-center">
               <h3 className="text-lg font-semibold">Texto Gerado:</h3>
               {generatedText && (
-                <Button 
-                  onClick={copyToClipboard} 
-                  variant="outline" 
+                <Button
+                  onClick={copyToClipboard}
+                  variant="outline"
                   size="sm"
                   className="bg-green-600 text-white hover:bg-green-700"
                 >
@@ -184,7 +184,7 @@ const BoasVindasAdesao = () => {
                 </Button>
               )}
             </div>
-            
+
             {generatedText && (
               <div className="bg-gray-50 p-4 rounded-lg whitespace-pre-line text-sm">
                 {generatedText}
