@@ -161,7 +161,7 @@ export function AppSidebar() {
         </SidebarGroup>
 
         <SidebarGroup className="py-4">
-          <SidebarGroupLabel className="text-brand-secondary font-semibold text-xs tracking-wider px-4 py-2">
+          <SidebarGroupLabel className="text-gray-600 font-semibold text-xs tracking-wider px-4 py-2">
             LINKS EXTERNOS
           </SidebarGroupLabel>
 
