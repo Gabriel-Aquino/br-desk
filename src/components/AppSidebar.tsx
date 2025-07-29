@@ -6,7 +6,9 @@ import {
   MapPin, 
   FileText, 
   Mail,
-  ExternalLink
+  ExternalLink,
+  ChevronDown,
+  ChevronRight
 } from "lucide-react";
 import { NavLink, useLocation } from "react-router-dom";
 
@@ -24,7 +26,14 @@ import {
 } from "@/components/ui/sidebar";
 
 const internalItems = [
-  { title: "BOAS-VINDAS", url: "/boas-vindas", icon: Home },
+  { 
+    title: "BOAS-VINDAS", 
+    icon: Home,
+    submenu: [
+      { title: "Boas-vindas Adesão", url: "/boas-vindas/adesao" },
+      { title: "Boas-vindas BR Power", url: "/boas-vindas/br-power" }
+    ]
+  },
   { title: "COBRANÇAS", url: "/cobrancas", icon: CreditCard },
   { title: "EVENTOS", url: "/eventos", icon: Calendar },
   { title: "RASTREAMENTO", url: "/rastreamento", icon: MapPin },
@@ -45,9 +54,18 @@ export function AppSidebar() {
   const location = useLocation();
   const currentPath = location.pathname;
   const isCollapsed = state === "collapsed";
+  const [openMenus, setOpenMenus] = useState<string[]>([]);
 
   const isActive = (path: string) => currentPath === path;
-  const isExpanded = internalItems.some((i) => isActive(i.url));
+  const isSubmenuActive = (submenu: any[]) => submenu?.some(item => isActive(item.url));
+  
+  const toggleMenu = (title: string) => {
+    setOpenMenus(prev => 
+      prev.includes(title) 
+        ? prev.filter(t => t !== title)
+        : [...prev, title]
+    );
+  };
 
   return (
     <Sidebar
@@ -64,7 +82,7 @@ export function AppSidebar() {
         </div>
 
         <SidebarGroup className="py-4">
-          <SidebarGroupLabel className="text-brand-secondary font-semibold text-xs tracking-wider px-4 py-2">
+          <SidebarGroupLabel className="text-gray-600 font-semibold text-xs tracking-wider px-4 py-2">
             UTILITÁRIOS
           </SidebarGroupLabel>
 
@@ -72,22 +90,70 @@ export function AppSidebar() {
             <SidebarMenu>
               {internalItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild>
-                    <NavLink 
-                      to={item.url} 
-                      end 
-                      className={({ isActive }) => 
-                        `flex items-center px-4 py-2 text-sm transition-colors ${
-                          isActive 
-                            ? "bg-brand-primary text-white font-medium" 
-                            : "text-gray-700 hover:bg-gray-100"
-                        }`
-                      }
-                    >
-                      <item.icon className="h-4 w-4 mr-3" />
-                      {!isCollapsed && <span>{item.title}</span>}
-                    </NavLink>
-                  </SidebarMenuButton>
+                  {item.submenu ? (
+                    <>
+                      <SidebarMenuButton asChild>
+                        <button
+                          onClick={() => toggleMenu(item.title)}
+                          className={`flex items-center w-full px-4 py-2 text-sm transition-colors text-left ${
+                            isSubmenuActive(item.submenu)
+                              ? "bg-brand-primary text-white font-medium"
+                              : "text-gray-700 hover:bg-gray-100"
+                          }`}
+                        >
+                          <item.icon className="h-4 w-4 mr-3" />
+                          {!isCollapsed && (
+                            <>
+                              <span className="flex-1">{item.title}</span>
+                              {openMenus.includes(item.title) ? (
+                                <ChevronDown className="h-4 w-4" />
+                              ) : (
+                                <ChevronRight className="h-4 w-4" />
+                              )}
+                            </>
+                          )}
+                        </button>
+                      </SidebarMenuButton>
+                      {openMenus.includes(item.title) && !isCollapsed && (
+                        <div className="ml-6">
+                          {item.submenu.map((subItem) => (
+                            <SidebarMenuButton key={subItem.title} asChild>
+                              <NavLink
+                                to={subItem.url}
+                                end
+                                className={({ isActive }) =>
+                                  `flex items-center px-4 py-2 text-sm transition-colors ${
+                                    isActive
+                                      ? "bg-brand-primary text-white font-medium"
+                                      : "text-gray-700 hover:bg-gray-100"
+                                  }`
+                                }
+                              >
+                                <span>{subItem.title}</span>
+                              </NavLink>
+                            </SidebarMenuButton>
+                          ))}
+                        </div>
+                      )}
+                    </>
+                  ) : (
+                    <SidebarMenuButton asChild>
+                      <NavLink
+                        to={item.url}
+                        end
+                        className={({ isActive }) =>
+                          `flex items-center px-4 py-2 text-sm transition-colors ${
+                            isActive
+                              ? "bg-brand-primary text-white font-medium"
+                              : "text-gray-700 hover:bg-gray-100"
+                          }`
+                        }
+                      >
+                        <item.icon className="h-4 w-4 mr-3" />
+                        {!isCollapsed && <span>{item.title}</span>}
+                      </NavLink>
+                    </SidebarMenuButton>
+                  )}
                 </SidebarMenuItem>
               ))}
             </SidebarMenu>
