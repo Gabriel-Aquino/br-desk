@@ -9,7 +9,8 @@ import {
   Mail,
   ExternalLink,
   ChevronDown,
-  ChevronRight
+  ChevronRight,
+  LogOut,
 } from "lucide-react";
 import { NavLink, useLocation } from "react-router-dom";
 
@@ -63,7 +64,11 @@ const externalItems = [
   }
 ];
 
-export function AppSidebar() {
+interface AppSidebarProps {
+  onLogout: () => void;
+}
+
+export function AppSidebar({ onLogout }: AppSidebarProps) {
   const { state } = useSidebar();
   const location = useLocation();
   const currentPath = location.pathname;
@@ -82,114 +87,116 @@ export function AppSidebar() {
   };
 
   return (
-    <Sidebar
-      collapsible="icon"
-    >
+    <Sidebar collapsible="icon">
       <SidebarContent className={styles.content}>
-        <div className={styles.header}>
-          <div className={styles.headerContent}>
-            <img src="/Images/brclube2.png" alt="BR Clube Logo" className={styles.logo} />
-            {!isCollapsed && <span className={styles.brand}>BR Clube</span>}
+        <div className="flex flex-col h-full">
+          <div className={styles.header}>
+            <div className={styles.headerContent}>
+              <img src="/Images/brclube2.png" alt="BR Clube Logo" className={styles.logo} />
+              {!isCollapsed && <span className={styles.brand}>BR Clube</span>}
+            </div>
           </div>
-        </div>
 
-        <SidebarGroup className={styles.group}>
-          <SidebarGroupLabel className={styles.groupLabel}>
-            UTILITÁRIOS
-          </SidebarGroupLabel>
+          <div className="flex-1 overflow-y-auto">
+            <SidebarGroup className={styles.group}>
+              <SidebarGroupLabel className={styles.groupLabel}>
+                UTILITÁRIOS
+              </SidebarGroupLabel>
 
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {internalItems.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  {item.submenu ? (
-                    <>
-                      <SidebarMenuButton asChild>
-                        <button
-                          onClick={() => toggleMenu(item.title)}
-                          className={getSubmenuButtonClasses(isSubmenuActive(item.submenu))}
-                        >
-                          <item.icon className={styles.icon} />
-                          {!isCollapsed && (
-                            <>
-                              <span className="flex-1">{item.title}</span>
-                              {openMenus.includes(item.title) ? (
-                                <ChevronDown className={styles.chevron} />
-                              ) : (
-                                <ChevronRight className={styles.chevron} />
+              <SidebarGroupContent>
+                <SidebarMenu>
+                  {internalItems.map((item) => (
+                    <SidebarMenuItem key={item.title}>
+                      {item.submenu ? (
+                        <>
+                          <SidebarMenuButton asChild>
+                            <button
+                              onClick={() => toggleMenu(item.title)}
+                              className={getSubmenuButtonClasses(isSubmenuActive(item.submenu))}
+                            >
+                              <item.icon className={styles.icon} />
+                              {!isCollapsed && (
+                                <>
+                                  <span className="flex-1">{item.title}</span>
+                                  {openMenus.includes(item.title) ? (
+                                    <ChevronDown className={styles.chevron} />
+                                  ) : (
+                                    <ChevronRight className={styles.chevron} />
+                                  )}
+                                </>
                               )}
-                            </>
+                            </button>
+                          </SidebarMenuButton>
+                          {openMenus.includes(item.title) && !isCollapsed && (
+                            <div className={styles.submenuWrapper}>
+                              {item.submenu.map((subItem) => (
+                                <SidebarMenuButton key={subItem.title} asChild>
+                                  <NavLink
+                                    to={subItem.url}
+                                    end
+                                    className={({ isActive }) => getMenuItemClasses(isActive)}
+                                  >
+                                    <span>{subItem.title}</span>
+                                  </NavLink>
+                                </SidebarMenuButton>
+                              ))}
+                            </div>
                           )}
-                        </button>
-                      </SidebarMenuButton>
-                      {openMenus.includes(item.title) && !isCollapsed && (
-                        <div className={styles.submenuWrapper}>
-                          {item.submenu.map((subItem) => (
-                            <SidebarMenuButton key={subItem.title} asChild>
-                              <NavLink
-                                to={subItem.url}
-                                end
-                                className={({ isActive }) => getMenuItemClasses(isActive)}
-                              >
-                                <span>{subItem.title}</span>
-                              </NavLink>
-                            </SidebarMenuButton>
-                          ))}
-                        </div>
+                        </>
+                      ) : (
+                        <SidebarMenuButton asChild>
+                          <NavLink
+                            to={item.url}
+                            end
+                            className={({ isActive }) => getMenuItemClasses(isActive)}
+                          >
+                            <item.icon className={styles.icon} />
+                            {!isCollapsed && <span>{item.title}</span>}
+                          </NavLink>
+                        </SidebarMenuButton>
                       )}
-                    </>
-                  ) : (
-                    <SidebarMenuButton asChild>
-                      <NavLink
-                        to={item.url}
-                        end
-                        className={({ isActive }) => getMenuItemClasses(isActive)}
-                      >
-                        <item.icon className={styles.icon} />
-                        {!isCollapsed && <span>{item.title}</span>}
-                      </NavLink>
-                    </SidebarMenuButton>
-                  )}
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
+                    </SidebarMenuItem>
+                  ))}
+                </SidebarMenu>
+              </SidebarGroupContent>
+            </SidebarGroup>
 
-        <SidebarGroup className={styles.group}>
-          <SidebarGroupLabel className={styles.groupLabel}>
-            LINKS EXTERNOS
-          </SidebarGroupLabel>
+            <SidebarGroup className={styles.group}>
+              <SidebarGroupLabel className={styles.groupLabel}>
+                LINKS EXTERNOS
+              </SidebarGroupLabel>
 
-          <SidebarGroupContent>
+              <SidebarGroupContent>
+                <SidebarMenu>
+                  {externalItems.map((item) => (
+                    <SidebarMenuItem key={item.title}>
+                      <SidebarMenuButton asChild>
+                        <a
+                          href={item.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className={styles.externalLink}
+                        >
+                          {item.icon ? React.cloneElement(item.icon, { className: styles.icon }) : <ExternalLink className={styles.icon} />}
+                          {!isCollapsed && <span>{item.title}</span>}
+                        </a>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  ))}
+                </SidebarMenu>
+              </SidebarGroupContent>
+            </SidebarGroup>
+          </div>
+
+          <div className="mt-auto p-2">
             <SidebarMenu>
-              {externalItems.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild>
-                    <a
-                      href={item.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className={styles.externalLink}
-                    >
-                      {item.icon ? React.cloneElement(item.icon, { className: styles.icon }) : <ExternalLink className={styles.icon} />}
-                      {!isCollapsed && <span>{item.title}</span>}
-                    </a>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
+              <SidebarMenuItem>
+                <SidebarMenuButton onClick={onLogout} className={styles.externalLink}>
+                  <LogOut className={styles.icon} />
+                  {!isCollapsed && <span>Sair</span>}
+                </SidebarMenuButton>
+              </SidebarMenuItem>
             </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
-
-        <div className={styles.footer}>
-          <div className={styles.footerContent}>
-            {!isCollapsed && (
-              <>
-                <div className={styles.footerCopyright}>© BR CLUBE | 2024</div>
-                <div>Todos os direitos reservados</div>
-              </>
-            )}
           </div>
         </div>
       </SidebarContent>
